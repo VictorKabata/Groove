@@ -69,8 +69,7 @@ class SongsFragment : Fragment() {
             requireActivity().startService(playerIntent)
             requireActivity().bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
         } else {
-            //Service is active
-            //Send media with BroadcastReceiver
+
         }
     }
 

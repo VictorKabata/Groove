@@ -20,6 +20,11 @@ import java.io.File
 class SongsAdapter(private val context: Context, private val songsModel: ArrayList<SongModel>) :
     RecyclerView.Adapter<SongsAdapter.SongsViewHolder>() {
 
+    companion object {
+        var MUSICLIST = "musiclist"
+        var MUSICPOSITION = "pos"
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SongsViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.song_item, parent, false)
 
@@ -44,7 +49,7 @@ class SongsAdapter(private val context: Context, private val songsModel: ArrayLi
 
         /*holder.itemView.setOnClickListener {
             var intentService = Intent(context, MediaPlayerService::class.java)
-            intentService.putExtra("media", position)
+            intentService.putExtra(MUSICPOSITION, position)
             context.startService(intentService)
         }*/
     }

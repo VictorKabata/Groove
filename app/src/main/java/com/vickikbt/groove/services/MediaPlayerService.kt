@@ -8,6 +8,7 @@ import android.media.MediaPlayer
 import android.os.Binder
 import android.os.IBinder
 import android.util.Log
+import com.vickikbt.groove.repository.SongsRepository.Companion.songModel
 import java.io.IOException
 
 class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
@@ -15,7 +16,10 @@ class MediaPlayerService : Service(), MediaPlayer.OnCompletionListener,
     MediaPlayer.OnInfoListener, AudioManager.OnAudioFocusChangeListener {
 
 
-    private val iBinder = LocalBinder()
+    //private val iBinder = LocalBinder()
+
+    var currentPosition: Int = 0
+    private var musicDataList = songModel
 
     private var mediaPlayer: MediaPlayer? = null
     private var songFilePath: String? = null
