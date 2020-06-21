@@ -1,24 +1,16 @@
 package com.vickikbt.groove.ui.fragments
 
-import android.content.ComponentName
-import android.content.Context
-import android.content.Intent
-import android.content.ServiceConnection
 import android.os.Bundle
-import android.os.IBinder
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.vickikbt.groove.R
 import com.vickikbt.groove.adapters.SongsAdapter
 import com.vickikbt.groove.databinding.FragmentSongsBinding
 import com.vickikbt.groove.repository.SongsRepository
-import com.vickikbt.groove.repository.SongsRepository.Companion.songModel
-import com.vickikbt.groove.services.MediaPlayerService
-import com.vickikbt.groove.services.MediaPlayerService.LocalBinder
+import com.vickikbt.groove.services.MusicPlayerService
 
 
 class SongsFragment : Fragment() {
@@ -26,7 +18,7 @@ class SongsFragment : Fragment() {
 
     private var songsRepository: SongsRepository? = null
 
-    private var player: MediaPlayerService? = null
+    private var player: MusicPlayerService? = null
     var serviceBound = false
 
     override fun onCreateView(
@@ -37,7 +29,6 @@ class SongsFragment : Fragment() {
         songsRepository = SongsRepository(requireActivity().applicationContext)
 
         loadRecyclerView()
-        playAudio(songModel[0].songPath)
 
         return binding.root
     }
@@ -49,28 +40,5 @@ class SongsFragment : Fragment() {
         binding.recyclerviewSongs.adapter = adapter
     }
 
-    private val serviceConnection: ServiceConnection = object : ServiceConnection {
-        override fun onServiceConnected(name: ComponentName, service: IBinder) {
-            val binder = service as LocalBinder
-            player = binder.service
-            serviceBound = true
-            Toast.makeText(activity, "Service Bound", Toast.LENGTH_SHORT).show()
-        }
-
-        override fun onServiceDisconnected(name: ComponentName) {
-            serviceBound = false
-        }
-    }
-
-    private fun playAudio(media: String) {
-        if (!serviceBound) {
-            val playerIntent = Intent(activity, MediaPlayerService::class.java)
-            playerIntent.putExtra("media", media)
-            requireActivity().startService(playerIntent)
-            requireActivity().bindService(playerIntent, serviceConnection, Context.BIND_AUTO_CREATE)
-        } else {
-
-        }
-    }
 
 }
