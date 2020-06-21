@@ -18,7 +18,7 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener,
     private var songPosition: Int? = null
     var songs = arrayListOf<SongModel>()
 
-    private val musicBind: IBinder = MusicBinder()
+    private val musicBinder: IBinder = LocalBinder()
 
     override fun onCreate() {
         super.onCreate()
@@ -28,29 +28,16 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener,
         initMusicPlayer()
     }
 
-    /* override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-         var playThisSong = songModel
-         var thisPosition = intent!!.getIntExtra(MUSICPOSITION, 0)
-         var songPath = playThisSong[thisPosition].songPath
-
-         player!!.stop()
-         player!!.setDataSource(songPath)
-         player!!.prepare()
-         player!!.start()
-
-
-         return super.onStartCommand(intent, flags, startId)
-     }*/
 
     override fun onBind(intent: Intent?): IBinder? {
-        return musicBind
+        return musicBinder
     }
 
-    override fun onUnbind(intent: Intent?): Boolean {
+    /*override fun onUnbind(intent: Intent?): Boolean {
         player!!.stop()
         player!!.release()
         return false
-    }
+    }*/
 
     private fun initMusicPlayer() {
         player!!.setWakeMode(applicationContext, PowerManager.PARTIAL_WAKE_LOCK)
@@ -68,14 +55,11 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener,
     fun playSong() {
         player = MediaPlayer()
         player!!.reset()
-        val playSong: SongModel = songs[0]
-        var currentSong = playSong.songPath
-        try {
-            player!!.setDataSource(currentSong)
-        } catch (e: Exception) {
-            Log.e("VickiKbtService", "Error setting data source", e)
-        }
-        player!!.prepareAsync()
+        player!!.setDataSource(songs[songPosition!!].songPath)
+        player!!.prepare()
+        player!!.start()
+
+        //player!!.prepareAsync()
     }
 
     fun setSong(songIndex: Int) {
@@ -95,9 +79,10 @@ class MusicPlayerService : Service(), MediaPlayer.OnCompletionListener,
         return false
     }
 
-    class MusicBinder : Binder() {
-        val musicservice: MusicPlayerService
-            get() = MusicPlayerService()
+    inner class LocalBinder : Binder() {
+        fun getService(): MusicPlayerService {
+            return this@MusicPlayerService
+        }
     }
 
 }

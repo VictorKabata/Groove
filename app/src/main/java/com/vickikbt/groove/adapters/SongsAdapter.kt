@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.vickikbt.groove.R
 import com.vickikbt.groove.model.SongModel
 import com.vickikbt.groove.services.MusicPlayerService
@@ -34,11 +35,11 @@ class SongsAdapter(private val context: Context, private val songsModel: ArrayLi
         var songPath = songsModel[position].songPath
         var songCoverArt = GetSongCoverArt.getSongCoverArt(songPath)
 
-        /*if (songCoverArt != null) {
+        if (songCoverArt != null) {
             Glide.with(context).load(songCoverArt).into(holder.songCoverArt)
         } else {
             Glide.with(context).load(R.drawable.ic_launcher_background).into(holder.songCoverArt)
-        }*/
+        }
 
         holder.songName.text = songsModel[position].songName
         holder.songArtist.text = songsModel[position].songArtist
@@ -50,9 +51,6 @@ class SongsAdapter(private val context: Context, private val songsModel: ArrayLi
             intentActivity.putExtra(MUSICPOSITION, position)
             context.startActivity(intentActivity)
 
-            /*var intentService = Intent(context, MusicPlayerService::class.java)
-            intentActivity.putExtra(MUSICPOSITION, position)
-            context.startService(intentActivity)*/
         }
     }
 
